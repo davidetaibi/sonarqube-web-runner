@@ -17,7 +17,7 @@
 
 		<div class="content">
 			<div class="section1"> 
-
+  
 				<h1 class="lblHeader"> Dashboard (Project List) </h1>
 
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
