@@ -13,6 +13,20 @@
 <body>
 	<div class="wrapper">
 		<div class="header">
+			<div class="logo">
+				<img src="http://sonar.inf.unibz.it/images/logo.svg">
+			</div> 
+			<div class="nav">
+				<ul>
+					<li> <a href="#"> Home </a> </li>
+					<li> <a href="system_settings.php"> System Settings </a> </li>
+					<!-- <li> <a href="#"> Measures </a> </li>
+					<li> <a href="#"> Rules </a> </li>
+					<li> <a href="#"> Quality Profiles </a> </li>
+					<li> <a href="#"> Quality Gates </a> </li>
+					<li> <a href="#"> More </a> </li> -->
+				</ul>
+			</div> 
 		</div>
 
 		<div class="content">
