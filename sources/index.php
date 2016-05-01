@@ -18,7 +18,7 @@
 			</div> 
 			<div class="nav">
 				<ul>
-					<li> <a href="#"> Home </a> </li>
+					<li> <a href="index.php"> Home </a> </li>
 					<li> <a href="system_settings.php"> System Settings </a> </li>
 					<!-- <li> <a href="#"> Measures </a> </li>
 					<li> <a href="#"> Rules </a> </li>
@@ -32,7 +32,7 @@
 		<div class="content">	
 			<div class="section1"> 
 				<h1 class="lblHeader"> Projects </h1>
-
+				
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					
 					<table>
@@ -67,8 +67,11 @@
 					</table>
 				 	
 				 	<p> 
-				 		<button type="submit" name="submit_btn" class="btn btn-default"> Add New Projects </button> 
+				 		<input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='project_settings.php' ">
 				 	</p>
+
+
+
 				</form>
 			</div>
 		</div>

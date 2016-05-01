@@ -18,7 +18,7 @@
 			</div> 
 			<div class="nav">
 				<ul>
-					<li> <a href="#"> Home </a> </li>
+					<li> <a href="index.php"> Home </a> </li>
 					<li> <a href="system_settings.php"> System Settings </a> </li>
 					<!-- <li> <a href="#"> Measures </a> </li>
 					<li> <a href="#"> Rules </a> </li>
@@ -31,34 +31,121 @@
 
 		<div class="content">
 			<div class="section1"> 
-				<p class="breadcrumbs"> <a href="index.php"> Main </a> / Project Settings </p>
+				<!-- <p class="breadcrumbs"> <a href="index.php"> Home </a> / Project Settings </p> -->
+
+				<?php
+				$nameErr = $keyErr = $repoLinkErr = $srcPathErr = "";
+				 if (isset($_POST['submit_btn'])) {
+				 	if (empty($_POST['proj_name'])) {
+				 		$nameErr = "Project name required";
+				 	}
+				 	else{
+				 		$proj_name = $_POST['proj_name'];
+				 	}
+
+				 	if (empty($_POST['proj_key'])) {
+				 		$keyErr = "Project key required";
+				 	}
+				 	else{
+				 		$proj_key = $_POST['proj_key'];
+				 	}
+
+				 	if (empty($_POST['repo_link'])) {
+				 		$repoLinkErr = "Repository link required";
+				 	}
+				 	else{
+				 		$repo_link = $_POST['repo_link'];
+				 	}
+
+				 	if (empty($_POST['src_path'])) {
+				 		$srcPathErr = "Source folder required";
+				 	}
+				 	else{
+				 		$src_path = $_POST['src_path'];
+				 	}
+
+				 }
+
+				?>
+
+				<?php 
+					$proj_name = isset($_POST['proj_name']) ? "sonar.projectName=". $_POST['proj_name'] : ''; 
+					$proj_key = isset($_POST['proj_key']) ? "sonar.projectKey=". $_POST['proj_key'] : ''; 
+					//$repo_link = isset($_POST['repo_link']) ? "svnRepo=". $_POST['repo_link'] : ''; 
+					/* $rdo_github = isset($_POST['rdo_github']) ? $_POST['rdo_github']: ''; 
+					$rdo_svn = isset($_POST['rdo_svn']) ? $_POST['rdo_svn'] : ''; */
+					if (isset($_POST['rdo_github'])) {
+						//$repo_type = $_POST['rdo_github'];
+						$repo_link = isset($_POST['repo_link']) ? "githubRepo=". $_POST['repo_link'] : ''; 
+					}
+					elseif (isset($_POST['rdo_svn'])) {
+						//$repo_type = $_POST['rdo_svn'];
+						$repo_link = isset($_POST['repo_link']) ? "svnRepo=". $_POST['repo_link'] : ''; 
+					}
+					$src_path = isset($_POST['src_path']) ? "sonar.sources=". $_POST['src_path'] : ''; 
+					$lang = isset($_POST['lang']) ? "sonar.language=". $_POST['lang'] : ''; 
+					/* $rdo_utf = isset($_POST['rdo_utf']) ? $_POST['rdo_utf']: ''; echo $rdo_utf; 
+					$rdo_western = isset($_POST['rdo_western']) ? $_POST['rdo_western'] : ''; echo $rdo_western; */
+					if (isset($_POST['rdo_utf'])) {
+						$src_encode = "sonar.sourceEncoding=". $_POST['rdo_utf'];
+					}
+					elseif (isset($_POST['rdo_western'])) {
+						$src_encode = "sonar.sourceEncoding=". $_POST['rdo_western'];
+					}
+				?>
+
+				<?php
+				if (isset($_POST['submit_btn'])) {
+					//echo "Submit button clicked ";
+					$proj_file_name= isset($_POST['proj_name']) ? $_POST['proj_name'] : ''; 
+					$proj_file_name = preg_replace('/\s+/', '', $proj_file_name);
+
+					//Reading the project files list
+					$proj_files_list = fopen("project_analysis/projects_list.properties", 'a');
+					fwrite($proj_files_list, $proj_file_name."\n");
+					fclose($proj_files_list);
+
+
+					//Creating a new project file
+					$path = fopen("project_analysis/$proj_file_name.properties", 'w');
+					fwrite($path, $proj_name ."\n");
+					fwrite($path, $proj_key ."\n");
+					fwrite($path, $repo_link ."\n");
+					fwrite($path, $src_path ."\n");
+					fwrite($path, $lang ."\n");
+					fwrite($path, $src_encode ."\n");
+					fclose($path); 
+				}
+				?>
+
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> Project Settings </h1>
 
 					<p class="form_elements">
 						<label> Project Name </label>
-						<input type="text"> </input>
+						<input type="text" name="proj_name"> </input> <span class="error"> <?php echo $nameErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Project Key  </label>
-						<input type="text"> </input>
+						<input type="text" name="proj_key"> </input>  <span class="error"> <?php echo $keyErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Repository Link </label>
-						<input type="text"> </input>
+						<input type="text" name="repo_link"> </input> <span class="error"> <?php echo $repoLinkErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Repository Type </label>
-						<input type="radio" name="rpoType"> Github
-						<input type="radio" name="rpoType"> SVN
+						<input type="radio" name="rdo_github" value="github" checked="true"> Github
+						<input type="radio" name="rdo_svn" value="svn"> SVN
 					</p>
 					<p class="form_elements">
 						<label> Source Folder </label>
-						<input type="text"> </input>  <span style="font-size: 0.8em"> (Relative Path)eg: / SRC / Java / SRC2) </span>
+						<input type="text" name="src_path"> </input>  <span style="font-size: 0.8em"> (Relative Path)eg: / SRC / Java / SRC2) </span>
+																	 <span class="error"> <?php echo $srcPathErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Language </label>
-						<select class="form-control" id="proj_name" style="width: 200px;">
+						<select class="form-control" name="lang" style="width: 200px;">
 							<option>Java</option>
 							<option>C#</option>
 							<option>Web</option>
@@ -66,8 +153,8 @@
 					</p>
 					<p class="form_elements">
 						<label> Source Encoding </label>
-						<input type="radio" name="rdo_utf"> UTF-8
-						<input type="radio" name="rdo_western"> Western
+						<input type="radio" name="rdo_utf" value="UTF-8" checked=true> UTF-8
+						<input type="radio" name="rdo_western" value="Western"> Western
 					</p>
 					<p>
 						<button type="submit" name="submit_btn" class="btn btn-default">Save</button> 

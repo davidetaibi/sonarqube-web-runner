@@ -18,7 +18,7 @@
 			</div> 
 			<div class="nav">
 				<ul>
-					<li> <a href="#"> Home </a> </li>
+					<li> <a href="index.php"> Home </a> </li>
 					<li> <a href="system_settings.php"> System Settings </a> </li>
 					<!-- <li> <a href="#"> Measures </a> </li>
 					<li> <a href="#"> Rules </a> </li>
@@ -31,17 +31,21 @@
 
 		<div class="content">
 			<div class="section1"> 
-				<p class="breadcrumbs"> <a href="index.php"> Main </a> / Shedule Analysis </p>
+				<!-- <p class="breadcrumbs"> <a href="index.php"> Home </a> / Shedule Analysis </p> -->
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> Shedule Analysis </h1>
 
 					<p class="form_elements">
 						<label> Project </label>
+
 						<select>
-							<option>Project 1</option>
-							<option>Project 2</option>
-							<option>Project 3</option>
-							<option>Project 4</option>
+						<?php
+							$proj_list = fopen("project_analysis/projects_list.properties", 'r');
+							while(!feof($proj_list)){
+								$project = fgets($proj_list);
+								echo '<option>' . $project . '</option>';
+							}
+						?>
 						</select>
 					</p>
 					<p class="form_elements">
