@@ -40,82 +40,65 @@
 				 		$nameErr = "Project name required";
 				 	}
 				 	else{
-				 		$proj_name = $_POST['proj_name'];
+				 		$proj_name = isset($_POST['proj_name']) ? "sonar.projectName=". $_POST['proj_name'] : ''; 
 				 	}
 
 				 	if (empty($_POST['proj_key'])) {
 				 		$keyErr = "Project key required";
 				 	}
 				 	else{
-				 		$proj_key = $_POST['proj_key'];
+				 		$proj_key = isset($_POST['proj_key']) ? "sonar.projectKey=". $_POST['proj_key'] : ''; 
 				 	}
+
+				 	if (isset($_POST['rdo_github'])) {
+						$repo_link = isset($_POST['repo_link']) ? "githubRepo=". $_POST['repo_link'] : ''; 
+					}
+					elseif (isset($_POST['rdo_svn'])) {
+						$repo_link = isset($_POST['repo_link']) ? "svnRepo=". $_POST['repo_link'] : ''; 
+					}
 
 				 	if (empty($_POST['repo_link'])) {
 				 		$repoLinkErr = "Repository link required";
 				 	}
 				 	else{
-				 		$repo_link = $_POST['repo_link'];
+				 		$repo_link = $repo_link;
 				 	}
 
 				 	if (empty($_POST['src_path'])) {
 				 		$srcPathErr = "Source folder required";
 				 	}
 				 	else{
-				 		$src_path = $_POST['src_path'];
+				 		$src_path = isset($_POST['src_path']) ? "sonar.sources=". $_POST['src_path'] : ''; 
 				 	}
 
-				 }
+				 	$lang = isset($_POST['lang']) ? "sonar.language=". $_POST['lang'] : ''; 
 
-				?>
-
-				<?php 
-					$proj_name = isset($_POST['proj_name']) ? "sonar.projectName=". $_POST['proj_name'] : ''; 
-					$proj_key = isset($_POST['proj_key']) ? "sonar.projectKey=". $_POST['proj_key'] : ''; 
-					//$repo_link = isset($_POST['repo_link']) ? "svnRepo=". $_POST['repo_link'] : ''; 
-					/* $rdo_github = isset($_POST['rdo_github']) ? $_POST['rdo_github']: ''; 
-					$rdo_svn = isset($_POST['rdo_svn']) ? $_POST['rdo_svn'] : ''; */
-					if (isset($_POST['rdo_github'])) {
-						//$repo_type = $_POST['rdo_github'];
-						$repo_link = isset($_POST['repo_link']) ? "githubRepo=". $_POST['repo_link'] : ''; 
-					}
-					elseif (isset($_POST['rdo_svn'])) {
-						//$repo_type = $_POST['rdo_svn'];
-						$repo_link = isset($_POST['repo_link']) ? "svnRepo=". $_POST['repo_link'] : ''; 
-					}
-					$src_path = isset($_POST['src_path']) ? "sonar.sources=". $_POST['src_path'] : ''; 
-					$lang = isset($_POST['lang']) ? "sonar.language=". $_POST['lang'] : ''; 
-					/* $rdo_utf = isset($_POST['rdo_utf']) ? $_POST['rdo_utf']: ''; echo $rdo_utf; 
-					$rdo_western = isset($_POST['rdo_western']) ? $_POST['rdo_western'] : ''; echo $rdo_western; */
-					if (isset($_POST['rdo_utf'])) {
+				 	if (isset($_POST['rdo_utf'])) {
 						$src_encode = "sonar.sourceEncoding=". $_POST['rdo_utf'];
 					}
 					elseif (isset($_POST['rdo_western'])) {
 						$src_encode = "sonar.sourceEncoding=". $_POST['rdo_western'];
 					}
-				?>
 
-				<?php
-				if (isset($_POST['submit_btn'])) {
-					//echo "Submit button clicked ";
-					$proj_file_name= isset($_POST['proj_name']) ? $_POST['proj_name'] : ''; 
-					$proj_file_name = preg_replace('/\s+/', '', $proj_file_name);
+					if (!$nameErr && !$keyErr && !$repoLinkErr && !$srcPathErr) {
+						$proj_file_name= isset($_POST['proj_name']) ? $_POST['proj_name'] : ''; 
+						$proj_file_name = preg_replace('/\s+/', '', $proj_file_name);
+						//Writing to the project files list
+						$proj_files_list = fopen("project_analysis/projects_list.properties", "a");
+						fwrite($proj_files_list, $proj_file_name);
+						fclose($proj_files_list);
 
-					//Reading the project files list
-					$proj_files_list = fopen("project_analysis/projects_list.properties", 'a');
-					fwrite($proj_files_list, $proj_file_name."\n");
-					fclose($proj_files_list);
+						$path = fopen("project_analysis/$proj_file_name.properties", 'w');
+						fwrite($path, $proj_name ."\n");
+						fwrite($path, $proj_key ."\n");
+						fwrite($path, $repo_link ."\n");
+						fwrite($path, $src_path ."\n");
+						fwrite($path, $lang ."\n");
+						fwrite($path, $src_encode ."\n");
+						fclose($path); 
+					}
+				 }
 
-
-					//Creating a new project file
-					$path = fopen("project_analysis/$proj_file_name.properties", 'w');
-					fwrite($path, $proj_name ."\n");
-					fwrite($path, $proj_key ."\n");
-					fwrite($path, $repo_link ."\n");
-					fwrite($path, $src_path ."\n");
-					fwrite($path, $lang ."\n");
-					fwrite($path, $src_encode ."\n");
-					fclose($path); 
-				}
 				?>
 
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">

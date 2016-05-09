@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projects><project><key>project1</key><download>Weekly</download><analyse>Each Commit</analyse></project><project><key>project2</key><download>Monthly</download><analyse>Last Commit of the Day</analyse></project><project><key>project4</key><download>Monthly</download><analyse>Monthly</analyse></project></projects>

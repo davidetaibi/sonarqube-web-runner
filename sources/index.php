@@ -35,12 +35,56 @@
 				
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					
-					<table>
+
+				 	<?php
+				 			$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
+
+				 			//echo $xml->project[2]->key;
+
+									/* echo "<table>";
+									$proj_list = fopen("project_analysis/projects_list.properties", 'r');
+									while(!feof($proj_list))
+									{
+										$project = fgets($proj_list); 
+										echo "<tr>";
+											echo  "<td>" . $project . "</td>" . "<br>";
+										echo "</tr>";
+									}
+								echo "</table>"; 
+									fclose($proj_list);  */
+						?> 
+
+
+						<table>
+							<th> Project </th>
+							<th> Last Analysis </th>
+							<th> Frequency </th>
+							<th> Settings </th> 
+
+							<?php
+							foreach ($xml->project as $project) {
+								echo'<tr>';
+									echo'<td>' . $project->key . '</td>';
+									echo'<td>' . 05/03/2016 .'</td>';
+									echo'<td>' . $project->analyse . '</td>';
+									echo'<td>';
+										echo'<a href="#"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
+										echo'<a href="project_settings.php"> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
+										echo'<a href="shedule.php"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
+										echo'<a href="#"> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>';
+									echo'</td>';
+								echo'</tr>';
+							}
+							?>
+
+						</table>
+
+					<!-- <table>
 						<th> Project </th>
 						<th> Last Analysis </th>
 						<th> Frequency </th>
-						<th> Settings </th>
-
+						<th> Settings </th> 
+					
 						<tr>
 							<td> Project 1 </td>
 							<td> 05/03/2016 </td>
@@ -64,13 +108,11 @@
 							</td>
 						</tr>
 
-					</table>
+					</table> -->
 				 	
 				 	<p> 
 				 		<input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='project_settings.php' ">
 				 	</p>
-
-
 
 				</form>
 			</div>
