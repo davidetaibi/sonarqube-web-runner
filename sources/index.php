@@ -35,7 +35,6 @@
 				
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					
-
 				 	<?php
 				 			$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
 
@@ -65,7 +64,7 @@
 							foreach ($xml->project as $project) {
 								echo'<tr>';
 									echo'<td>' . $project->key . '</td>';
-									echo'<td>' . 05/03/2016 .'</td>';
+									echo'<td>' . 'N/A' .'</td>';
 									echo'<td>' . $project->analyse . '</td>';
 									echo'<td>';
 										echo'<a href="#"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';

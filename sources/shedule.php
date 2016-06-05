@@ -34,12 +34,32 @@
 				
 			<?php
 
+
+		   /* $dir = 'project_analysis';
+		   $files = scandir($dir);
+		   print_r($files); */
+
+		   $downloadErr = $analyzeErr = "";
 			if (isset($_POST['submit_btn'])) {
 			
-					$download = isset($_POST['optDownload']) ? $_POST['optDownload'] : '';
-					$projectName = isset($_POST['optProject']) ? $_POST['optProject'] : '';
-					$analyse = isset($_POST['optAnalyse']) ? $_POST['optAnalyse'] : '';
-				
+				if (empty($_POST['optProject'])) {
+				 		$nameErr = "Project name required";
+				 }
+				else{
+				 	$projectName = isset($_POST['optProject']) ? $_POST['optProject'] : '';
+				}
+				if (empty($_POST['optDownload'])) {
+				 		$downloadErr = "Select download frequency";
+				 }
+				else{
+				 	$download = isset($_POST['optDownload']) ? $_POST['optDownload'] : '';
+				}
+				if (empty($_POST['optAnalyse'])) {
+				 		$analyzeErr = "Select analyze frequency";
+				 }
+				else{
+				 	$analyse = isset($_POST['optAnalyse']) ? $_POST['optAnalyse'] : '';
+				}
 
 				// CREATING A NEW XML DOCUMENT
 				
@@ -71,29 +91,34 @@
 				$xml->save("project_analysis/shedule.xml"); */
 
 
-				//APPENDING TO A XML DOCUMENT
-				$xml = new DOMDocument();
-			    $xml->load('project_analysis/shedule.xml');
+				if (!$downloadErr && !$analyzeErr) {
+					//APPENDING TO A XML DOCUMENT
+					$xml = new DOMDocument();
+				    $xml->load('project_analysis/shedule.xml');
 
-			    $root = $xml->firstChild;
-			    //$root = $xml->getElementsByTagName("projects");
+				    $root = $xml->firstChild;
+				    //$root = $xml->getElementsByTagName("projects");
 
-				$project = $xml->createElement("project");
-				$root->appendChild($project);
+					$project = $xml->createElement("project");
+					$root->appendChild($project);
 
-				$projectName = $xml->createElement("key",$projectName);
-				$projectName = $project->appendChild($projectName);
+					$projectName = $xml->createElement("key",$projectName);
+					$projectName = $project->appendChild($projectName);
 
-				$download = $xml->createElement("download",$download);
-				$download = $project->appendChild($download);
+					$download = $xml->createElement("download",$download);
+					$download = $project->appendChild($download);
 
-				$analyse = $xml->createElement("analyse",$analyse);
-				$analyse = $project->appendChild($analyse);
+					$analyse = $xml->createElement("analyse",$analyse);
+					$analyse = $project->appendChild($analyse);
 
-				$xml->FormatOutput = true;
-				$string_value = $xml->saveXml();
-				$xml->save("project_analysis/shedule.xml");
+					$xml->FormatOutput = true;
+					$string_value = $xml->saveXml();
+					$xml->save("project_analysis/shedule.xml");
 
+					//Validate data saving message
+					$saved_msg = "Information Saved Successfully.";
+				}
+				
 			}
 			?>
 
@@ -101,15 +126,16 @@
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> Shedule Analysis </h1>
 
+					<?php $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
+					<p> <span class="saved_msg"> <?php echo $saved_msg; ?></span> </p>
+
 					<p class="form_elements">
 						<label> Project </label>
-
 						<?php
 						echo '<select name="optProject">';
 							$proj_list = fopen("project_analysis/projects_list.properties", 'r');
 							while(!feof($proj_list)){
 								$project = fgets($proj_list);
-								
 									echo '<option>' . $project . '</option>';
 							}
 						echo'</select>';
@@ -119,14 +145,17 @@
 						<label>Download Project:</label>
 					 	<input type="radio" name="optDownload" value="Daily">Daily
 						<input type="radio" name="optDownload" value="Weekly">Weekly
-						<input type="radio" name="optDownload" value="Monthly">Monthly 					
-					</p>
+						<input type="radio" name="optDownload" value="Monthly">Monthly 		
+						<span class="error"> <?php echo $downloadErr; ?> </span>
+					</p>  
+
 					<p class="form_elements">
 						<label> Analyze </label> 
 						<input type="radio" name="optAnalyse" value="Each Commit">Each Commit
 						<input type="radio" name="optAnalyse" value="Last Commit of the Day">Last Commit of the Day 
 						<input type="radio" name="optAnalyse" value="Last Commit of the Week">Last Commit of the Week
 						<input type="radio" name="optAnalyse" value="Monthly">Monthly
+						<span class="error"> <?php echo $analyzeErr; ?> </span>
 					</p>
 					<button type="submit" name="submit_btn" class="btn btn-default">Save</button> 
 				</form>

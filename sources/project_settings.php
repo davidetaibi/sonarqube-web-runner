@@ -35,14 +35,13 @@
 
 				<?php
 				$nameErr = $keyErr = $repoLinkErr = $srcPathErr = "";
-				 if (isset($_POST['submit_btn'])) {
+				if (isset($_POST['submit_btn'])) {
 				 	if (empty($_POST['proj_name'])) {
 				 		$nameErr = "Project name required";
 				 	}
 				 	else{
 				 		$proj_name = isset($_POST['proj_name']) ? "sonar.projectName=". $_POST['proj_name'] : ''; 
 				 	}
-
 				 	if (empty($_POST['proj_key'])) {
 				 		$keyErr = "Project key required";
 				 	}
@@ -96,6 +95,10 @@
 						fwrite($path, $lang ."\n");
 						fwrite($path, $src_encode ."\n");
 						fclose($path); 
+
+						//Validate data saving message
+						$saved_msg = "Information Saved Successfully.";
+
 					}
 				 }
 
@@ -104,6 +107,9 @@
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> Project Settings </h1>
 
+					<?php $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
+
+					<p> <span class="saved_msg"> <?php echo $saved_msg; ?></span> </p>
 					<p class="form_elements">
 						<label> Project Name </label>
 						<input type="text" name="proj_name"> </input> <span class="error"> <?php echo $nameErr; ?> </span>

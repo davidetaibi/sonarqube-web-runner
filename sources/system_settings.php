@@ -36,31 +36,39 @@
 
 				 	<p>
 				 		<?php
-				 			$nameErr = "";
+				 			$instanceErr = $usernameErr = $passwordErr = "";
 				 			if (isset($_POST['submit_btn'])) {
 				 				if (empty($_POST['txt_instance'])) {
-				 					$nameErr = "Instance required";
-				 					
+				 					$instanceErr = "Instance required";
 				 				}
 				 				else{
-				 					$txt_instance = $_POST['txt_instance'];
+				 					$instance = 'sonar.host.url='.$_POST['txt_instance']; 
 				 				}
+				 				if (empty($_POST['txt_username'])) {
+				 					$usernameErr = "Username required";
+				 				}
+				 				else{
+				 					$username = 'sonarqube_web_runner.username='.$_POST['txt_username']; 
+				 				}
+				 				if (empty($_POST['txt_password'])) {
+				 					$passwordErr = "Password required";
+				 				}
+				 				else{
+				 					$password = 'sonarqube_web_runner.password='.$_POST['txt_password']; 
+				 				}
+
+				 				if (!$instanceErr && !$usernameErr && !$passwordErr) {
+									$path = fopen("sonar-runner/conf/sonar-runner.properties", 'w');
+									fwrite($path, $instance ."\n");
+									fwrite($path, $username ."\n");
+									fwrite($path, $password ."\n");
+									fclose($path); 
+									//Validate data saving message
+									$saved_msg = "Information Saved Successfully.";
+								} 
+
 				 			}
-
-
-
-				 		/* if (isset($_POST['submit_btn'])) {
-					 		$get_proj_list = fopen("project_analysis/projects_list.properties", 'r');
-					 		$i=0;
-							while(!feof($get_proj_list)){
-								$line = fgets($get_proj_list);
-								$i++;
-								echo $line . "<br>";
-							}	
-							$num_projects = $i; echo $num_projects;
-							$project = file('project_analysis/projects_list.properties');
-							echo $project[0]; echo $project[1]; 
-							}	*/						
+					
 						?> 
 
 				 	</p>
@@ -70,17 +78,19 @@
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> System Settings </h1>
 
+					<?php $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
+					
 					<p class="form_elements">
 						<label> Sonarqube Instance </label>
-						<input type="text" name="txt_instance"></input> <span class="error"> <?php echo $nameErr; ?> </span>
+						<input type="text" name="txt_instance"></input> <span class="error"> <?php echo $instanceErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Username </label>
-						<input type="text" name="txt_username"></input>
+						<input type="text" name="txt_username"> <span class="error"> <?php echo $usernameErr; ?> </input>
 					</p>
 					<p class="form_elements">
 						<label> Password </label>
-						<input type="password" name="txt_password"></input>
+						<input type="password" name="txt_password"> <span class="error"> <?php echo $passwordErr; ?> </input>
 					</p>
 					<p>
 						<button type="submit" name="submit_btn" class="btn btn-default">Save</button> 
