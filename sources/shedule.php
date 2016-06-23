@@ -61,62 +61,28 @@
 				 	$analyse = isset($_POST['optAnalyse']) ? $_POST['optAnalyse'] : '';
 				}
 
-				// CREATING A NEW XML DOCUMENT
-				
-				/* $projects = $xml -> createElement("projects");
-				$projects = $xml -> appendChild($projects);
-
-				$project = $xml->createElement($projectName);
-				$project = $projects->appendChild($project); */
-
-				/* $xml = new DomDocument("1.0","UTF-8");
-
-				$projects = $xml -> createElement("projects");
-				$projects = $xml -> appendChild($projects);
-
-				$project = $xml->createElement("project");
-				$project = $projects->appendChild($project);
-
-				$projectName = $xml->createElement("key",$projectName);
-				$projectName = $project->appendChild($projectName);
-
-				$download = $xml->createElement("download",$download);
-				$download = $project->appendChild($download);
-
-				$analyse = $xml->createElement("analyse",$analyse);
-				$analyse = $project->appendChild($analyse);
-
-				$xml->FormatOutput = true;
-				$string_value = $xml->saveXml();
-				$xml->save("project_analysis/shedule.xml"); */
-
+				$dt_execute = '00/00/0000';
 
 				if (!$downloadErr && !$analyzeErr) {
 					//APPENDING TO A XML DOCUMENT
-					$xml = new DOMDocument();
-				    $xml->load('project_analysis/shedule.xml');
 
-				    $root = $xml->firstChild;
-				    //$root = $xml->getElementsByTagName("projects");
+				    $file = 'project_analysis/shedule.xml';
+					$xml = simplexml_load_file($file) or die("Error: Cannot create object");
 
-					$project = $xml->createElement("project");
-					$root->appendChild($project);
+					foreach ($xml->project as $project) {
+						if ($_POST['optProject'] == $project->key) {
+						 	$project->download = $_POST['optDownload'];		
+						 	$project->analyse = $_POST['optAnalyse'];					 
+						 	$xml->asXML($file);
+						}
+					}
 
-					$projectName = $xml->createElement("key",$projectName);
-					$projectName = $project->appendChild($projectName);
-
-					$download = $xml->createElement("download",$download);
-					$download = $project->appendChild($download);
-
-					$analyse = $xml->createElement("analyse",$analyse);
-					$analyse = $project->appendChild($analyse);
-
-					$xml->FormatOutput = true;
-					$string_value = $xml->saveXml();
-					$xml->save("project_analysis/shedule.xml");
 
 					//Validate data saving message
 					$saved_msg = "Information Saved Successfully.";
+					sleep(1);
+					header('location:index.php');
+
 				}
 				
 			}
@@ -132,13 +98,21 @@
 					<p class="form_elements">
 						<label> Project </label>
 						<?php
-						echo '<select name="optProject">';
+						/* echo '<select name="optProject">';
 							$proj_list = fopen("project_analysis/projects_list.properties", 'r');
 							while(!feof($proj_list)){
 								$project = fgets($proj_list);
 									echo '<option>' . $project . '</option>';
 							}
+						echo'</select>'; */
+
+						$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
+						echo '<select name="optProject">';
+							foreach ($xml->project as $project) {
+								echo '<option>' . $project->key . '</option>';
+							}
 						echo'</select>';
+
 						?>
 					</p>
 					<p class="form_elements">

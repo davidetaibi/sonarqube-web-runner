@@ -31,9 +31,6 @@
 
 		<div class="content">
 			<div class="section1"> 
-
-
-
 				 	<p>
 				 		<?php
 				 			$instanceErr = $usernameErr = $passwordErr = "";

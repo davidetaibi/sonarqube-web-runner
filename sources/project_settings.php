@@ -96,8 +96,44 @@
 						fwrite($path, $src_encode ."\n");
 						fclose($path); 
 
+
+						//Creating XML file
+						$download = 'N/A';
+						$analyse = 'N/A';
+						$dt_execute = '00/00/0000';
+
+						//APPENDING TO A XML DOCUMENT
+						$xml = new DOMDocument();
+					    $xml->load('project_analysis/shedule.xml');
+
+					    $root = $xml->firstChild;
+					    //$root = $xml->getElementsByTagName("projects");
+
+						$project = $xml->createElement("project");
+						$root->appendChild($project);
+
+						$projectKey = $xml->createElement("key",$_POST['proj_key']);
+						$projectKey = $project->appendChild($projectKey);
+
+						$download = $xml->createElement("download",$download);
+						$download = $project->appendChild($download);
+
+						$analyse = $xml->createElement("analyse",$analyse);
+						$analyse = $project->appendChild($analyse);
+
+						$dt_execute = $xml->createElement("dt_execute",$dt_execute);
+						$dt_execute = $project->appendChild($dt_execute);
+
+						$xml->FormatOutput = true;
+						$string_value = $xml->saveXml();
+						$xml->save("project_analysis/shedule.xml");
+
+
 						//Validate data saving message
 						$saved_msg = "Information Saved Successfully.";
+
+						sleep(1);
+						header('location:index.php');
 
 					}
 				 }

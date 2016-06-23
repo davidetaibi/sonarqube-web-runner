@@ -53,7 +53,6 @@
 									fclose($proj_list);  */
 						?> 
 
-
 						<table>
 							<th> Project </th>
 							<th> Last Analysis </th>
@@ -64,10 +63,11 @@
 							foreach ($xml->project as $project) {
 								echo'<tr>';
 									echo'<td>' . $project->key . '</td>';
-									echo'<td>' . 'N/A' .'</td>';
+									echo'<td>' . $project->dt_execute .'</td>';
 									echo'<td>' . $project->analyse . '</td>';
 									echo'<td>';
-										echo'<a href="#"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
+										//echo'<a href="'. shell_exec('project_analysis/execute-sonar-svn.sh') .'"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
+										echo'<a href="execute_analysis.php"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
 										echo'<a href="project_settings.php"> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
 										echo'<a href="shedule.php"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
 										echo'<a href="#"> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>';
