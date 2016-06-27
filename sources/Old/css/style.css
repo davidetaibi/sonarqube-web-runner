@@ -1,0 +1,11 @@
+/* CSS Document */
+
+#container{
+	border:solid 1px;
+	}
+
+img.sonarqube{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	}

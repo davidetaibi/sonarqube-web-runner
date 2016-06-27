@@ -108,8 +108,15 @@
 
 						$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
 						echo '<select name="optProject">';
-							foreach ($xml->project as $project) {
-								echo '<option>' . $project->key . '</option>';
+							foreach ($xml->project as $project) 
+							{
+								if ($_GET['key']==$project->key) {
+									echo '<option selected>' . $project->key . '</option>';
+								}
+								else
+								{
+									echo '<option>' . $project->key . '</option>';
+								}
 							}
 						echo'</select>';
 

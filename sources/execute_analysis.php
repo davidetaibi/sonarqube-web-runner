@@ -2,15 +2,18 @@
 
 
 
+
+// vmware , turnkey linux lamp stack
+
 //echo date("d-m-y h:i:s A");
 
 shell_exec('project_analysis/execute-sonar-svn.sh');
 
 $file = 'project_analysis/shedule.xml';
 $xml = simplexml_load_file($file) or die("Error: Cannot create object");
-print_r($xml);
+//print_r($xml);
 
-echo "<br>";
+//echo "<br>";
 
 foreach ($xml->project as $project) {
 	//$project -> addChild('dt_execute',date("d-m-y h:i:s A") );
@@ -23,6 +26,5 @@ foreach ($xml->project as $project) {
 }
 
 header('Location:index.php'); 
-
 
 ?>

@@ -69,7 +69,7 @@
 										//echo'<a href="'. shell_exec('project_analysis/execute-sonar-svn.sh') .'"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
 										echo'<a href="execute_analysis.php"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
 										echo'<a href="project_settings.php"> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
-										echo'<a href="shedule.php"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
+										echo'<a href="shedule.php?key='.$project->key.'"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
 										echo'<a href="#"> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>';
 									echo'</td>';
 								echo'</tr>';
