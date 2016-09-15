@@ -42,12 +42,15 @@
 				 	else{
 				 		$proj_name = isset($_POST['proj_name']) ? "sonar.projectName=". $_POST['proj_name'] : ''; 
 				 	}
-				 	if (empty($_POST['proj_key'])) {
+				 	/* if (empty($_POST['proj_key'])) {
 				 		$keyErr = "Project key required";
 				 	}
 				 	else{
 				 		$proj_key = isset($_POST['proj_key']) ? "sonar.projectKey=". $_POST['proj_key'] : ''; 
-				 	}
+				 	} */
+
+				 	$proj_name_compressed = preg_replace('/\s+/', '', $_POST['proj_name']);
+				 	$proj_key = isset($_POST['proj_name']) ? "sonar.projectKey=". $proj_name_compressed : ''; 
 
 				 	if (isset($_POST['rdo_github'])) {
 						$repo_link = isset($_POST['repo_link']) ? "githubRepo=". $_POST['repo_link'] : ''; 
@@ -103,34 +106,29 @@
 						$dt_execute = '00/00/0000';
 
 						//APPENDING TO A XML DOCUMENT
-						$xml = new DOMDocument();
-					    $xml->load('project_analysis/shedule.xml');
+						$file = 'project_analysis/shedule.xml';
+						$xml = simplexml_load_file($file) or die("Error: Cannot create object");
 
-					    $root = $xml->firstChild;
-					    //$root = $xml->getElementsByTagName("projects");
+						$project = $xml->addChild('project');
+						$project->addAttribute('key', $proj_name_compressed);
 
-						$project = $xml->createElement("project");
-						$root->appendChild($project);
+						$project->addChild('key', $proj_name_compressed); 
+						$project->addChild('name', $_POST['proj_name']); 
+						$project->addChild('download', 'N/A'); 
+						$project->addChild('analyse', 'N/A'); 
+						$project->addChild('date_execute', '00/00/0000'); 
+						//New fields to XML file
+						$project->addChild('repo_link', $_POST['repo_link']); 
+						$project->addChild('repo_type', $_POST['rdo_repo']); 
+						$project->addChild('src_path', $_POST['src_path']); 
+						$project->addChild('lang', $_POST['lang']); 
+						$project->addChild('src_encode', $_POST['rdo_encode']); 
 
-						$projectKey = $xml->createElement("key",$_POST['proj_key']);
-						$projectKey = $project->appendChild($projectKey);
-
-						$download = $xml->createElement("download",$download);
-						$download = $project->appendChild($download);
-
-						$analyse = $xml->createElement("analyse",$analyse);
-						$analyse = $project->appendChild($analyse);
-
-						$dt_execute = $xml->createElement("dt_execute",$dt_execute);
-						$dt_execute = $project->appendChild($dt_execute);
-
-						$xml->FormatOutput = true;
-						$string_value = $xml->saveXml();
-						$xml->save("project_analysis/shedule.xml");
+						file_put_contents($file, $xml->asXml());
 
 
 						//Validate data saving message
-						$saved_msg = "Information Saved Successfully.";
+						//$saved_msg = "Information Saved Successfully.";
 
 						sleep(1);
 						header('location:index.php');
@@ -141,6 +139,32 @@
 				?>
 
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
+
+				 	<?php
+				 		$xml=simplexml_load_file('project_analysis/shedule.xml') or die("Error: Cannot create object");
+				 			//$xml=simplexml_load_file('project_analysis/shedule.xml')
+				 		if ((isset($_GET['action']) && $_GET['action']='update')) {
+				 			$a = $_GET['no']; //echo $a;
+				 			//echo $xml->project[0]->repo_type;
+				 			$j=0;
+				 			foreach ($xml->project as $project) {
+				 				if ($a==$j) {
+				 					$proj_name = $project[0]->name;
+				 					$repo_link = $project[0]->repo_link;
+				 					$repo_type = $project[0]->repo_type;
+				 					$src_path = $project[0]->src_path;
+				 					$lang = $project[0]->lang;
+				 					$src_encode = $project[0]->src_encode;
+				 				} 
+				 				$j++;
+				 			}
+				 		}
+
+					?> 
+
+
+
+
 					<h1 class="lblHeader"> Project Settings </h1>
 
 					<?php $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
@@ -148,38 +172,73 @@
 					<p> <span class="saved_msg"> <?php echo $saved_msg; ?></span> </p>
 					<p class="form_elements">
 						<label> Project Name </label>
-						<input type="text" name="proj_name"> </input> <span class="error"> <?php echo $nameErr; ?> </span>
+						<input type="text" name="proj_name" value="<?php echo $proj_name; ?>"> </input> <span class="error"> <?php echo $nameErr; ?> </span>
 					</p>
-					<p class="form_elements">
+					<!-- <p class="form_elements">
 						<label> Project Key  </label>
 						<input type="text" name="proj_key"> </input>  <span class="error"> <?php echo $keyErr; ?> </span>
-					</p>
+					</p> -->
 					<p class="form_elements">
 						<label> Repository Link </label>
-						<input type="text" name="repo_link"> </input> <span class="error"> <?php echo $repoLinkErr; ?> </span>
+						<input type="text" name="repo_link" value="<?php echo $repo_link; ?>"> </input> <span class="error"> <?php echo $repoLinkErr; ?> </span>
 					</p>
 					<p class="form_elements">
-						<label> Repository Type </label>
-						<input type="radio" name="rdo_github" value="github" checked="true"> Github
-						<input type="radio" name="rdo_svn" value="svn"> SVN
+						<label> Repository Type </label> 
+						<?php 
+							if (isset($repo_type) && $repo_type=='github') {
+								echo '<input type="radio" name="rdo_repo" value="github" checked="true"> Github';
+								echo '<input type="radio" name="rdo_repo" value="svn"> SVN';
+							}elseif (isset($repo_type) && $repo_type=='svn') {
+								echo '<input type="radio" name="rdo_repo" value="github"> Github';
+								echo '<input type="radio" name="rdo_repo" value="svn" checked="true"> SVN'; 
+							}elseif (!isset($repo_type)) {
+								echo '<input type="radio" name="rdo_repo" value="github" checked="true"> Github';
+								echo '<input type="radio" name="rdo_repo" value="svn"> SVN'; }
+						?>
 					</p>
 					<p class="form_elements">
 						<label> Source Folder </label>
-						<input type="text" name="src_path"> </input>  <span style="font-size: 0.8em"> (Relative Path)eg: / SRC / Java / SRC2) </span>
-																	 <span class="error"> <?php echo $srcPathErr; ?> </span>
+						<?php $src_path = isset($src_path) ? $src_path: ''; ?>
+						<input type="text" name="src_path" value="<?php echo $src_path; ?>"> </input>  <span style="font-size: 0.8em"> (Relative Path)eg: / SRC / Java / SRC2) </span>
+						<span class="error"> <?php echo $srcPathErr; ?> </span>
 					</p>
 					<p class="form_elements">
 						<label> Language </label>
+						
 						<select class="form-control" name="lang" style="width: 200px;">
-							<option>Java</option>
-							<option>C#</option>
-							<option>Web</option>
+							<?php
+								if ($lang=='Java') {
+									echo "<option selected> java </option>";
+									echo "<option> C# </option>";
+									echo "<option> Web </option>";
+								}
+								elseif ($lang=='C#') {
+									echo "<option >java</option>";
+									echo "<option selected>C#</option>";
+									echo "<option >Web</option>";
+								}
+								elseif ($lang=='Web') {
+									echo "<option>java</option>";
+									echo "<option>C#</option>";
+									echo "<option selected>Web</option>";
+								}
+							?>
 						 </select>
 					</p>
 					<p class="form_elements">
 						<label> Source Encoding </label>
-						<input type="radio" name="rdo_utf" value="UTF-8" checked=true> UTF-8
-						<input type="radio" name="rdo_western" value="Western"> Western
+
+						<?php 
+							if (isset($src_encode) && $src_encode=='UTF-8') {
+								echo '<input type="radio" name="rdo_encode" value="UTF-8" checked="true"> UTF-8';
+								echo '<input type="radio" name="rdo_encode" value="Western"> Western';
+							}elseif (isset($src_encode) && $src_encode=='Western') {
+								echo '<input type="radio" name="rdo_encode" value="UTF-8"> UTF-8';
+								echo '<input type="radio" name="rdo_encode" value="Western" checked="true"> Western'; 
+							}elseif (!isset($src_encode)) {
+								echo '<input type="radio" name="rdo_encode" value="UTF-8" checked="true"> UTF-8';
+								echo '<input type="radio" name="rdo_encode" value="Western"> Western'; }
+						?>
 					</p>
 					<p>
 						<button type="submit" name="submit_btn" class="btn btn-default">Save</button> 
