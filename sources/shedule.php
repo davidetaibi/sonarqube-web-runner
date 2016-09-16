@@ -34,7 +34,12 @@
 				
 			<?php
 
-		   	$downloadErr = $analyzeErr = "";
+
+		   /* $dir = 'project_analysis';
+		   $files = scandir($dir);
+		   print_r($files); */
+
+		   $downloadErr = $analyzeErr = "";
 			if (isset($_POST['submit_btn'])) {
 			
 				if (empty($_POST['optProject'])) {
@@ -68,9 +73,9 @@
 						if ($_POST['optProject'] == $project->key) {
 						 	$project->download = $_POST['optDownload'];		
 						 	$project->analyse = $_POST['optAnalyse'];					 
-						 	$xml->asXML($file); 
+						 	$xml->asXML($file);
 						}
-					} 
+					}
 
 
 					//Validate data saving message
@@ -78,7 +83,7 @@
 					sleep(1);
 					header('location:index.php');
 
-				} 
+				}
 				
 			}
 			?>
@@ -91,9 +96,8 @@
 					<p> <span class="saved_msg"> <?php echo $saved_msg; ?></span> </p>
 
 					<p class="form_elements">
-						<label> Project </label> 
+						<label> Project </label>
 						<?php
-
 						/* echo '<select name="optProject">';
 							$proj_list = fopen("project_analysis/projects_list.properties", 'r');
 							while(!feof($proj_list)){
@@ -103,26 +107,18 @@
 						echo'</select>'; */
 
 						$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
-
-						//echo $xml['attribute']; 
-
-
 						echo '<select name="optProject">';
 							foreach ($xml->project as $project) 
 							{
-								//$role = $project->attributes();
-
-
-								if ($_GET['key']==$project['key']) {
-									echo '<option selected>' . $project['key'] . '</option>';
+								if ($_GET['key']==$project->key) {
+									echo '<option selected>' . $project->key . '</option>';
 								}
 								else
 								{
-									echo '<option>' . $project['key'] . '</option>';
+									echo '<option>' . $project->key . '</option>';
 								}
 							}
 						echo'</select>';
-
 
 						?>
 					</p>

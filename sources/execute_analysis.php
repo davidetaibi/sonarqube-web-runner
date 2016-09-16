@@ -7,7 +7,7 @@
 
 //echo date("d-m-y h:i:s A");
 
-echo shell_exec('project_analysis/execute-sonar-svn.sh');
+shell_exec('project_analysis/execute-sonar-svn.sh');
 
 $file = 'project_analysis/shedule.xml';
 $xml = simplexml_load_file($file) or die("Error: Cannot create object");
