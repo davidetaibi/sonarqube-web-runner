@@ -9,7 +9,17 @@
 	<title>
 		Sonarqube web application
 	</title>
+
+	<!-- <script type="text/javascript">
+		function confirm_click()
+		{
+		if(confirm('Are you sure?'))
+			window.location.href='delete_project.php?key='.$project->name.'?';
+		}
+	</script> -->
+
 </head>
+
 <body>
 	<div class="wrapper">
 		<div class="header">
@@ -35,22 +45,10 @@
 				
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					
-				 	<?php
-				 			$xml=simplexml_load_file("project_analysis/shedule.xml") or die("Error: Cannot create object");
+				 		<?php
+				 			$xml=simplexml_load_file('project_analysis/shedule.xml') or die("Error: Cannot create object");
+				 			//$xml=simplexml_load_file('project_analysis/shedule.xml')
 
-				 			//echo $xml->project[2]->key;
-
-									/* echo "<table>";
-									$proj_list = fopen("project_analysis/projects_list.properties", 'r');
-									while(!feof($proj_list))
-									{
-										$project = fgets($proj_list); 
-										echo "<tr>";
-											echo  "<td>" . $project . "</td>" . "<br>";
-										echo "</tr>";
-									}
-								echo "</table>"; 
-									fclose($proj_list);  */
 						?> 
 
 						<table>
@@ -60,19 +58,23 @@
 							<th> Settings </th> 
 
 							<?php
+							$i=0;
 							foreach ($xml->project as $project) {
 								echo'<tr>';
-									echo'<td>' . $project->key . '</td>';
-									echo'<td>' . $project->dt_execute .'</td>';
+									echo'<td>' . $project->name . '</td>';
+									echo'<td>' . $project->date_execute .'</td>';
 									echo'<td>' . $project->analyse . '</td>';
 									echo'<td>';
 										//echo'<a href="'. shell_exec('project_analysis/execute-sonar-svn.sh') .'"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
 										echo'<a href="execute_analysis.php"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
-										echo'<a href="project_settings.php"> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
-										echo'<a href="shedule.php?key='.$project->key.'"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
-										echo'<a href="#"> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>';
+										//echo'<a href="project_settings.php?action=editproj&no='.$i.'&key='.$project['key'].' "> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
+										echo'<a href="update_projects.php?no='.$i.'&key='.$project['key'].' "> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
+										echo'<a href="shedule.php?key='.$project['key'].'"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';
+										//echo'<a href="delete_project.php?key='.$project->name.'" "> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>'; 
+										echo'<a href="delete_project.php?action=delete&key='.$project['key'].'"> <img src="css/img/delete.png" class="img_icon" title="Delete Project"> </a>'; 
 									echo'</td>';
 								echo'</tr>';
+								$i++;
 							}
 							?>
 
@@ -110,7 +112,8 @@
 					</table> -->
 				 	
 				 	<p> 
-				 		<input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='project_settings.php' ">
+				 		<!-- <input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='project_settings.php?action=addproj' "> -->
+				 		<input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='add_projects.php'">
 				 	</p>
 
 				</form>
