@@ -97,7 +97,7 @@
 					<p> <span class="saved_msg"> <?php echo $saved_msg; ?></span> </p>
 					<p class="form_elements">
 						<label> Project Name </label>
-						<input type="text" name="proj_name" value="<?php echo $proj_name; ?>"> </input> <span class="error"> <?php echo $nameErr; ?> </span>
+						<input type="text" name="proj_name" value="<?php echo $proj_name; ?>" readonly> </input> <span class="error"> <?php echo $nameErr; ?> </span>
 					</p>
 					</p> 
 					<p class="form_elements">

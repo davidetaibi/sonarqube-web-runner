@@ -114,6 +114,8 @@
 				 	<p> 
 				 		<!-- <input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='project_settings.php?action=addproj' "> -->
 				 		<input type="button" name="submit_btn" value="Add New Projects" onclick="window.location.href='add_projects.php'">
+				 		<!-- <input type="button" value="Execute" onclick="<?php //echo exec('cmd /c D:\test.bat'); ?>"> -->
+				 		
 				 	</p>
 
 				</form>

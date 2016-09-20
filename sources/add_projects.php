@@ -134,9 +134,10 @@
 
 								//Validate data saving message
 								$saved_msg = "Information Saved Successfully.";
+							
+								sleep(1);
+								header('location:index.php');
 							}
-					sleep(1);
-					header('location:index.php');
 					}
 
 					
