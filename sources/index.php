@@ -62,11 +62,11 @@
 							foreach ($xml->project as $project) {
 								echo'<tr>';
 									echo'<td>' . $project->name . '</td>';
-									echo'<td>' . $project->date_execute .'</td>';
+									echo'<td>' . $project->dt_execute .'</td>';
 									echo'<td>' . $project->analyse . '</td>';
 									echo'<td>';
 										//echo'<a href="'. shell_exec('project_analysis/execute-sonar-svn.sh') .'"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
-										echo'<a href="execute_analysis.php"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
+										echo'<a href="execute_analysis.php?key='.$project['key'].'"> <img src="css/img/exec_analysis.png" class="img_icon" title="Execute Analysis"> </a>';
 										//echo'<a href="project_settings.php?action=editproj&no='.$i.'&key='.$project['key'].' "> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
 										echo'<a href="update_projects.php?no='.$i.'&key='.$project['key'].' "> <img src="css/img/proj_settings.png" class="img_icon" title="Project Settings"> </a>';
 										echo'<a href="shedule.php?key='.$project['key'].'"> <img src="css/img/shedule_analysis.png" class="img_icon" title="Shedule Analysis"> </a>';

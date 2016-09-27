@@ -75,7 +75,7 @@
 				 <form role="form" action=<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?> method="post">
 					<h1 class="lblHeader"> System Settings </h1>
 
-					<?php $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
+					<?php echo $saved_msg = isset($saved_msg) ? $saved_msg : '' ; ?>
 					
 					<p class="form_elements">
 						<label> Sonarqube Instance </label>
